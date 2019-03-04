@@ -1,4 +1,6 @@
 package main;
 
-public class ID {
+public enum ID {
+
+    Player();
 }

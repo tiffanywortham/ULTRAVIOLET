@@ -2,16 +2,28 @@ package main;
 
 import java.awt.*;
 
-public class Entity extends GameObject{
+public class Player extends GameObject{
 
-    public Entity(int x, int y, ID id) {
+    ObjectHandler handler;
+
+    public Player(int x, int y, ID id, ObjectHandler handler) {
         super(x, y, id);
+        this.handler = handler;
 
     }
 
     public void tick() {
         x += velocityX;
         y += velocityY;
+
+        if(handler.isUp()) velocityY = -5;
+        else if(!handler.isDown()) velocityY = 0;
+
+        if(handler.isDown()) velocityY = 100;
+        else if(!handler.isUp()) velocityY = 0;
+
+        if(handler.isLeft()) velocityY = -5;
+        else if(!handler.isRight()) velocityY = 0;
 
     }
 
