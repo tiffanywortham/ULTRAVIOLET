@@ -5,7 +5,6 @@ import javafx.scene.paint.Color;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 
-
 public class Game extends Canvas implements Runnable {
 
     private boolean isRunning = false;
