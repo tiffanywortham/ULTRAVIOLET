@@ -5,7 +5,6 @@ import javafx.scene.paint.Color;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 
-
 public class Game extends Canvas implements Runnable {
 
     private boolean isRunning = false;
@@ -43,7 +42,7 @@ public class Game extends Canvas implements Runnable {
         this.requestFocus();
         long lastTime = System.nanoTime();
         double amountOfTicks = 60.0;
-        double ns = 1000000000;
+        double ns = 1000000000 / amountOfTicks;
         double delta = 0;
         long timer = System.currentTimeMillis();
         int frames = 0;
