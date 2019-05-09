@@ -25,8 +25,8 @@ public class Game extends Canvas implements Runnable {
         BufferedImageLoader loader = new BufferedImageLoader();
         level = loader.loadImage("/minorMaze.png");
 
-        handler.addObject(new Player(400, 500, ID.Player, handler));
-
+        //handler.addObject(new Player(400, 500, ID.Player, handler));
+        loadLevel(level);
     }
 
     private void start(){
@@ -99,6 +99,27 @@ public class Game extends Canvas implements Runnable {
         g.dispose();
         bs.show();
 
+    }
+    
+    //loading the level
+    private void loadLevel(BufferedImage image) {
+    	int w = image.getWidth();
+    	int h = image.getHeight();
+    	
+    	for(int xx = 0; xx < w; xx++) {
+    		for(int yy = 0; yy < h; yy++) {
+    			int pixel = image.getRGB(xx,  yy);
+    			int red = (pixel >> 16) & 0xff;
+    			int green = (pixel >> 8) & 0xff;
+    			int blue = (pixel) & 0xff;
+    			
+    			if(red == 0)
+    				handler.addObject(new Block(xx*32, yy*32, ID.Block));
+    			
+    			if(blue == 255)
+    				handler.addObject(new Player(xx*32, yy*32, ID.Player, handler));
+    		}
+    	}
     }
 
     public static void main(String args[]){

@@ -16,8 +16,6 @@ public class Player extends GameObject{
         x += velocityX;
         y += velocityY;
 
-        collision();
-
         if(handler.isUp()) velocityY = -5;
         else if(!handler.isDown()) velocityY = 0;
 
@@ -33,26 +31,12 @@ public class Player extends GameObject{
     }
 
     public void render(Graphics g) {
-        g.setColor(Color.blue);
-        g.fillRect(x, y, 32,32);
+        g.setColor(Color.MAGENTA);
+        g.fillOval(x, y, 32,32);
 
     }
 
     public Rectangle getBounds() {
-        return new Rectangle(x, y, 32, 32);
-    }
-
-    private void collision() {
-        for (int i = 0; i < handler.object.size(); i++) {
-            GameObject tempPlayer = handler.object.get(i);
-
-            if(tempPlayer.getId() == ID.Block) {
-                if(getBounds().intersects(tempPlayer.getBounds())) {
-                    // This is essentially reversing the expected movement when the Player hits a wall
-                    x += velocityX * -1;
-                    y += velocityY * -1;
-                }
-            }
-        }
+        return null;
     }
 }
