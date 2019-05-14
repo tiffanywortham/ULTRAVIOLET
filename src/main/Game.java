@@ -4,7 +4,6 @@ import javafx.scene.paint.Color;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 
 public class Game extends Canvas implements Runnable {
@@ -12,21 +11,34 @@ public class Game extends Canvas implements Runnable {
     private boolean isRunning = false;
     private Thread thread;
     private ObjectHandler handler;
+    private Menu menu;
+
+    private BufferedImage map = null;
     
-    private BufferedImage level = null;
+    public static enum STATE {
+    	MENU,
+    	GAME
+    };
+    
+    public static STATE State = STATE.MENU;
 
     public Game(){
-        new Window(1000, 700, "ULTRAVIOLET", this);
+        new Window(1600, 900, "ULTRAVIOLET", this);
         start();
 
         handler = new ObjectHandler();
         this.addKeyListener(new KeyInput(handler));
-        
-        BufferedImageLoader loader = new BufferedImageLoader();
-        level = loader.loadImage("/minorMaze.png");
+        menu = new Menu();
 
-        //handler.addObject(new Player(400, 500, ID.Player, handler));
-        loadLevel(level);
+        //ImageLoader loader = new ImageLoader();
+        //map = loader.loadImage("/minorMaze.png");
+
+        setUpMaze();
+        handler.addObject(new Player(780, 430, ID.Player, handler));
+        handler.addObject(new Block(900, 500, ID.Block));
+        //loadMap(map);
+        
+        this.addMouseListener(new MouseInput());
     }
 
     private void start(){
@@ -76,12 +88,13 @@ public class Game extends Canvas implements Runnable {
     }
 
     public void tick(){
-        handler.tick();
-
+    	if(State == STATE.GAME) { 
+    		handler.tick();
+    	}
     }
 
     public void render(){
-        Toolkit.getDefaultToolkit().sync();
+       // Toolkit.getDefaultToolkit().sync();
         BufferStrategy bs = this.getBufferStrategy();
         if(bs == null){
             this.createBufferStrategy(3);
@@ -89,37 +102,25 @@ public class Game extends Canvas implements Runnable {
         }
 
         Graphics g = bs.getDrawGraphics();
-        Toolkit.getDefaultToolkit().sync();
 
-        g.setColor(java.awt.Color.BLACK);
-        g.fillRect(0, 0, 1000, 700);
+        //Toolkit.getDefaultToolkit().sync();
 
-        handler.render(g);
+        g.fillRect(0, 0, 1600, 900);
+        if(State == STATE.GAME) {
+        	handler.render(g);
+        } else if (State == STATE.MENU) {
+        	menu.render(g);
+        }
 
         g.dispose();
         bs.show();
-
     }
-    
-    //loading the level
-    private void loadLevel(BufferedImage image) {
-    	int w = image.getWidth();
-    	int h = image.getHeight();
-    	
-    	for(int xx = 0; xx < w; xx++) {
-    		for(int yy = 0; yy < h; yy++) {
-    			int pixel = image.getRGB(xx,  yy);
-    			int red = (pixel >> 16) & 0xff;
-    			int green = (pixel >> 8) & 0xff;
-    			int blue = (pixel) & 0xff;
-    			
-    			if(red == 0)
-    				handler.addObject(new Block(xx*32, yy*32, ID.Block));
-    			
-    			if(blue == 255)
-    				handler.addObject(new Player(xx*32, yy*32, ID.Player, handler));
-    		}
-    	}
+
+    private void setUpMaze() {
+        for (int i = 0; i < 1600; i += 20) {
+            handler.addObject(new Block(i, 0, ID.Block));
+        }
+        handler.addObject(new Block(0, 0, ID.Block));
     }
 
     public static void main(String args[]){
